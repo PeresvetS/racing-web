@@ -61,7 +61,7 @@ export function DaysList({ documentId, days, onUpdate }: DaysListProps) {
     createMutation.mutate();
   };
 
-  const handleDeleteClick = (day: ReportDay, e: React.MouseEvent) => {
+  const handleDeleteClick = (day: ReportDay, e: React.SyntheticEvent) => {
     e.stopPropagation();
     setDayToDelete(day);
     setDeleteDialogOpen(true);
