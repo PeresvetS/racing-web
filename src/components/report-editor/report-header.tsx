@@ -20,7 +20,6 @@ export function ReportHeader({ document, onUpdate }: ReportHeaderProps) {
   const { t } = useI18n();
   const queryClient = useQueryClient();
 
-  const [eventName, setEventName] = useState(document.eventName);
   const [driverName, setDriverName] = useState(document.driverName);
   const [trackName, setTrackName] = useState(document.trackName);
   const [shortTrackName, setShortTrackName] = useState(document.shortTrackName);
@@ -42,8 +41,7 @@ export function ReportHeader({ document, onUpdate }: ReportHeaderProps) {
   });
 
   const handleFieldBlur = (field: string, value: string) => {
-    const originalValue = field === 'eventName' ? document.eventName :
-                         field === 'driverName' ? document.driverName :
+    const originalValue = field === 'driverName' ? document.driverName :
                          field === 'trackName' ? document.trackName :
                          field === 'shortTrackName' ? document.shortTrackName :
                          field === 'trackLength' ? document.trackLength :
@@ -74,17 +72,6 @@ export function ReportHeader({ document, onUpdate }: ReportHeaderProps) {
           <CardTitle>{t('editor.header.basicInfo')}</CardTitle>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="eventName">{t('editor.header.eventName')}</Label>
-            <Input
-              id="eventName"
-              value={eventName}
-              onChange={(e) => setEventName(e.target.value)}
-              onBlur={() => handleFieldBlur('eventName', eventName)}
-              placeholder={t('editor.header.eventNamePlaceholder')}
-              disabled={updateMutation.isPending}
-            />
-          </div>
           <div className="space-y-2">
             <Label htmlFor="reportDate">{t('editor.header.reportDate')}</Label>
             <Input
