@@ -12,7 +12,7 @@ interface FileUploadProps {
   value: FileData | null;
   onChange: (file: FileData | null) => void;
   fileType: FileType;
-  context?: { documentId?: string; dayId?: string; remarkId?: string };
+  context?: { documentId?: string; dayId?: string };
   accept?: Record<string, string[]>;
   maxSize?: number;
   className?: string;

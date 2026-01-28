@@ -1,0 +1,12 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile.railway"
+buildArgs = ["VITE_API_URL"]
+
+[deploy]
+restartPolicyType = "always"
+restartPolicyMaxRetries = 5
+
+[[services]]
+name = "web"
+internal_port = 80

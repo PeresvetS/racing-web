@@ -1,42 +1,43 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { RemarkItem } from './remark-item';
-import { remarksApi } from '@/services/api';
+import { ReportSlideItem } from './report-slide-item';
+import { reportSlidesApi } from '@/services/api';
 import { useI18n } from '@/context/i18n-context';
-import type { Remark } from '@/types';
+import type { ReportSlide } from '@/types';
 
-interface RemarksSectionProps {
+interface ReportSlidesSectionProps {
+  documentId: string;
   dayId: string;
-  remarks: Remark[];
+  slides: ReportSlide[];
   onUpdate: () => void;
 }
 
-export function RemarksSection({ dayId, remarks, onUpdate }: RemarksSectionProps) {
+export function ReportSlidesSection({ documentId, dayId, slides, onUpdate }: ReportSlidesSectionProps) {
   const { t } = useI18n();
   const queryClient = useQueryClient();
 
   const createMutation = useMutation({
-    mutationFn: () => remarksApi.create(dayId, { text: '' }),
+    mutationFn: () => reportSlidesApi.create(dayId, { content: '## New Slide\n\nYour content here...' }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['document'] });
       onUpdate();
     },
   });
 
-  const handleAddRemark = () => {
+  const handleAddSlide = () => {
     createMutation.mutate();
   };
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">{t('editor.remarks.title')}</h3>
+        <h3 className="text-lg font-semibold">{t('editor.reportSlides.title')}</h3>
         <Button
           type="button"
           size="sm"
           variant="outline"
-          onClick={handleAddRemark}
+          onClick={handleAddSlide}
           disabled={createMutation.isPending}
         >
           {createMutation.isPending ? (
@@ -44,18 +45,18 @@ export function RemarksSection({ dayId, remarks, onUpdate }: RemarksSectionProps
           ) : (
             <Plus className="h-4 w-4 mr-2" />
           )}
-          {t('editor.remarks.add')}
+          {t('editor.reportSlides.add')}
         </Button>
       </div>
 
-      {remarks.length === 0 ? (
+      {slides.length === 0 ? (
         <div className="text-center py-8 border-2 border-dashed rounded-lg text-muted-foreground">
-          <p>{t('editor.remarks.empty')}</p>
+          <p>{t('editor.reportSlides.empty')}</p>
           <Button
             type="button"
             variant="ghost"
             size="sm"
-            onClick={handleAddRemark}
+            onClick={handleAddSlide}
             disabled={createMutation.isPending}
             className="mt-2"
           >
@@ -64,16 +65,17 @@ export function RemarksSection({ dayId, remarks, onUpdate }: RemarksSectionProps
             ) : (
               <Plus className="h-4 w-4 mr-2" />
             )}
-            {t('editor.remarks.addFirst')}
+            {t('editor.reportSlides.addFirst')}
           </Button>
         </div>
       ) : (
         <div className="space-y-3">
-          {remarks.map((remark) => (
-            <RemarkItem
-              key={remark.id}
+          {slides.map((slide) => (
+            <ReportSlideItem
+              key={slide.id}
+              documentId={documentId}
               dayId={dayId}
-              remark={remark}
+              slide={slide}
               onUpdate={onUpdate}
               onDelete={onUpdate}
             />

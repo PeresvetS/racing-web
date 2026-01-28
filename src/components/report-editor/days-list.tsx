@@ -102,13 +102,15 @@ export function DaysList({ documentId, days, onUpdate }: DaysListProps) {
               >
                 <span>{t('editor.days.dayNumber', { number: day.dayNumber })}</span>
                 {days.length > 1 && (
-                  <button
-                    type="button"
+                  <span
+                    role="button"
+                    tabIndex={0}
                     onClick={(e) => handleDeleteClick(day, e)}
-                    className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:text-destructive"
+                    onKeyDown={(e) => e.key === 'Enter' && handleDeleteClick(day, e)}
+                    className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:text-destructive cursor-pointer"
                   >
                     <Trash2 className="h-3 w-3" />
-                  </button>
+                  </span>
                 )}
               </TabsTrigger>
             ))}
@@ -147,7 +149,7 @@ export function DaysList({ documentId, days, onUpdate }: DaysListProps) {
             <DialogTitle>{t('editor.days.deleteTitle')}</DialogTitle>
           </DialogHeader>
           <p className="text-muted-foreground">
-            {t('editor.days.deleteConfirm', { number: dayToDelete?.dayNumber })}
+            {t('editor.days.deleteConfirm', { number: dayToDelete?.dayNumber ?? '' })}
           </p>
           <DialogFooter>
             <Button

@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FileUpload } from './file-upload';
 import { documentsApi } from '@/services/api';
 import { useI18n } from '@/context/i18n-context';
-import type { DocumentFull, FileData, ReportSettings } from '@/types';
+import type { DocumentFull, FileData } from '@/types';
 
 interface ReportHeaderProps {
   document: DocumentFull;
@@ -23,15 +23,14 @@ export function ReportHeader({ document, onUpdate }: ReportHeaderProps) {
   const [eventName, setEventName] = useState(document.eventName);
   const [driverName, setDriverName] = useState(document.driverName);
   const [trackName, setTrackName] = useState(document.trackName);
+  const [shortTrackName, setShortTrackName] = useState(document.shortTrackName);
+  const [trackLength, setTrackLength] = useState(document.trackLength);
+  const [trackWidth, setTrackWidth] = useState(document.trackWidth);
+  const [cornerCount, setCornerCount] = useState(document.cornerCount);
   const [reportDate, setReportDate] = useState(
     format(new Date(document.reportDate), 'yyyy-MM-dd')
   );
   const [trackMapFile, setTrackMapFile] = useState<FileData | null>(document.trackMapFile);
-
-  // Settings
-  const [lanes, setLanes] = useState(document.settings?.lanes?.toString() || '');
-  const [yBit, setYBit] = useState(document.settings?.yBit?.toString() || '');
-  const [corner, setCorner] = useState(document.settings?.corner || '');
 
   const updateMutation = useMutation({
     mutationFn: (data: Parameters<typeof documentsApi.updateReport>[1]) =>
@@ -46,6 +45,10 @@ export function ReportHeader({ document, onUpdate }: ReportHeaderProps) {
     const originalValue = field === 'eventName' ? document.eventName :
                          field === 'driverName' ? document.driverName :
                          field === 'trackName' ? document.trackName :
+                         field === 'shortTrackName' ? document.shortTrackName :
+                         field === 'trackLength' ? document.trackLength :
+                         field === 'trackWidth' ? document.trackWidth :
+                         field === 'cornerCount' ? document.cornerCount :
                          field === 'reportDate' ? format(new Date(document.reportDate), 'yyyy-MM-dd') :
                          '';
 
@@ -55,23 +58,6 @@ export function ReportHeader({ document, onUpdate }: ReportHeaderProps) {
       } else {
         updateMutation.mutate({ [field]: value });
       }
-    }
-  };
-
-  const handleSettingsBlur = () => {
-    const newSettings: ReportSettings = {};
-    if (lanes.trim()) newSettings.lanes = parseInt(lanes, 10);
-    if (yBit.trim()) newSettings.yBit = parseInt(yBit, 10);
-    if (corner.trim()) newSettings.corner = corner.trim();
-
-    const currentSettings = document.settings || {};
-    const hasChanges =
-      newSettings.lanes !== currentSettings.lanes ||
-      newSettings.yBit !== currentSettings.yBit ||
-      newSettings.corner !== currentSettings.corner;
-
-    if (hasChanges) {
-      updateMutation.mutate({ settings: Object.keys(newSettings).length > 0 ? newSettings : undefined });
     }
   };
 
@@ -108,6 +94,7 @@ export function ReportHeader({ document, onUpdate }: ReportHeaderProps) {
               onChange={(e) => setReportDate(e.target.value)}
               onBlur={() => handleFieldBlur('reportDate', reportDate)}
               disabled={updateMutation.isPending}
+              className="h-12 text-lg px-4 cursor-pointer"
             />
           </div>
           <div className="space-y-2">
@@ -132,47 +119,56 @@ export function ReportHeader({ document, onUpdate }: ReportHeaderProps) {
               disabled={updateMutation.isPending}
             />
           </div>
+          <div className="space-y-2">
+            <Label htmlFor="shortTrackName">{t('editor.header.shortTrackName')}</Label>
+            <Input
+              id="shortTrackName"
+              value={shortTrackName}
+              onChange={(e) => setShortTrackName(e.target.value)}
+              onBlur={() => handleFieldBlur('shortTrackName', shortTrackName)}
+              placeholder={t('editor.header.shortTrackNamePlaceholder')}
+              disabled={updateMutation.isPending}
+            />
+          </div>
         </CardContent>
       </Card>
 
-      {/* Settings */}
+      {/* Track Info */}
       <Card>
         <CardHeader>
-          <CardTitle>{t('editor.header.settings')}</CardTitle>
+          <CardTitle>{t('editor.header.trackInfo')}</CardTitle>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="lanes">{t('editor.header.lanes')}</Label>
+            <Label htmlFor="trackLength">{t('editor.header.trackLength')}</Label>
             <Input
-              id="lanes"
-              type="number"
-              value={lanes}
-              onChange={(e) => setLanes(e.target.value)}
-              onBlur={handleSettingsBlur}
-              placeholder="8"
+              id="trackLength"
+              value={trackLength}
+              onChange={(e) => setTrackLength(e.target.value)}
+              onBlur={() => handleFieldBlur('trackLength', trackLength)}
+              placeholder={t('editor.header.trackLengthPlaceholder')}
               disabled={updateMutation.isPending}
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="yBit">{t('editor.header.yBit')}</Label>
+            <Label htmlFor="trackWidth">{t('editor.header.trackWidth')}</Label>
             <Input
-              id="yBit"
-              type="number"
-              value={yBit}
-              onChange={(e) => setYBit(e.target.value)}
-              onBlur={handleSettingsBlur}
-              placeholder="4"
+              id="trackWidth"
+              value={trackWidth}
+              onChange={(e) => setTrackWidth(e.target.value)}
+              onBlur={() => handleFieldBlur('trackWidth', trackWidth)}
+              placeholder={t('editor.header.trackWidthPlaceholder')}
               disabled={updateMutation.isPending}
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="corner">{t('editor.header.corner')}</Label>
+            <Label htmlFor="cornerCount">{t('editor.header.cornerCount')}</Label>
             <Input
-              id="corner"
-              value={corner}
-              onChange={(e) => setCorner(e.target.value)}
-              onBlur={handleSettingsBlur}
-              placeholder="Left"
+              id="cornerCount"
+              value={cornerCount}
+              onChange={(e) => setCornerCount(e.target.value)}
+              onBlur={() => handleFieldBlur('cornerCount', cornerCount)}
+              placeholder={t('editor.header.cornerCountPlaceholder')}
               disabled={updateMutation.isPending}
             />
           </div>
@@ -184,13 +180,16 @@ export function ReportHeader({ document, onUpdate }: ReportHeaderProps) {
         <CardHeader>
           <CardTitle>{t('editor.header.trackMap')}</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-2">
           <FileUpload
             value={trackMapFile}
             onChange={handleTrackMapChange}
             fileType="TRACK_MAP"
             context={{ documentId: document.id }}
           />
+          <p className="text-sm text-muted-foreground">
+            {t('editor.header.trackMapHint')}
+          </p>
         </CardContent>
       </Card>
 

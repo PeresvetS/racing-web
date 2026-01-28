@@ -7,12 +7,6 @@ import { useAuth } from '@/context/auth-context';
 import { useI18n } from '@/context/i18n-context';
 import type { Locale } from '@/lib/i18n';
 
-const languageLabels: Record<Locale, string> = {
-  ru: 'Русский',
-  en: 'English',
-  ee: 'Eesti',
-};
-
 export function SettingsPage() {
   const { theme, setTheme } = useTheme();
   const { user } = useAuth();
@@ -81,13 +75,13 @@ export function SettingsPage() {
           </CardHeader>
           <CardContent>
             <div className="flex gap-2">
-              {locales.map((loc) => (
+              {(Object.keys(locales) as Locale[]).map((loc) => (
                 <Button
                   key={loc}
                   variant={locale === loc ? 'default' : 'outline'}
                   onClick={() => setLocale(loc)}
                 >
-                  {languageLabels[loc]}
+                  {locales[loc]}
                 </Button>
               ))}
             </div>

@@ -18,7 +18,7 @@ export interface LoginCredentials {
 }
 
 // ===== File Types =====
-export type FileType = 'TRACK_MAP' | 'KART_CHECKING' | 'IMPORTANT_NOTE' | 'REMARK' | 'SEE_YOU_SOON';
+export type FileType = 'TRACK_MAP' | 'KART_CHECKING' | 'SEE_YOU_SOON' | 'REPORT_SLIDE';
 
 export interface FileData {
   id: string;
@@ -35,7 +35,6 @@ export interface UploadFileDto {
   type: FileType;
   documentId?: string;
   dayId?: string;
-  remarkId?: string;
 }
 
 // ===== Document Types =====
@@ -68,9 +67,9 @@ export interface TelemetrySession {
   minSpeedKmh: number | null;
 }
 
-export interface Remark {
+export interface ReportSlide {
   id: string;
-  text: string;
+  content: string;
   orderIndex: number;
   imageFile: FileData | null;
 }
@@ -78,14 +77,14 @@ export interface Remark {
 export interface ReportDay {
   id: string;
   dayNumber: number;
+  dayDate: string | null;
   weather: string | null;
+  tyres: string | null;
   trackCondition: string | null;
-  importantNotes: string | null;
   documentId: string;
   kartCheckingFile: FileData | null;
-  importantNoteFile: FileData | null;
   sessions: TelemetrySession[];
-  remarks: Remark[];
+  reportSlides: ReportSlide[];
   createdAt: string;
   updatedAt: string;
 }
@@ -100,6 +99,10 @@ export interface DocumentFull {
   eventName: string;
   driverName: string;
   trackName: string;
+  shortTrackName: string;
+  trackLength: string;
+  trackWidth: string;
+  cornerCount: string;
   settings: ReportSettings | null;
   trackMapFile: FileData | null;
   seeYouSoonFile: FileData | null;
@@ -133,6 +136,10 @@ export interface UpdateReportDto {
   eventName?: string;
   driverName?: string;
   trackName?: string;
+  shortTrackName?: string;
+  trackLength?: string;
+  trackWidth?: string;
+  cornerCount?: string;
   settings?: ReportSettings;
   trackMapFileId?: string | null;
   seeYouSoonFileId?: string | null;
@@ -150,18 +157,16 @@ export interface CreateDayDto {
   dayNumber: number;
   weather?: string;
   trackCondition?: string;
-  importantNotes?: string;
   kartCheckingFileId?: string;
-  importantNoteFileId?: string;
 }
 
 export interface UpdateDayDto {
   dayNumber?: number;
+  dayDate?: string;
   weather?: string;
+  tyres?: string;
   trackCondition?: string;
-  importantNotes?: string;
   kartCheckingFileId?: string | null;
-  importantNoteFileId?: string | null;
 }
 
 // ===== Telemetry Types =====
@@ -178,19 +183,19 @@ export interface BatchUpdateTelemetryDto {
   sessions: UpdateTelemetrySessionDto[];
 }
 
-// ===== Remark Types =====
-export interface CreateRemarkDto {
-  text: string;
+// ===== Report Slide Types =====
+export interface CreateReportSlideDto {
+  content: string;
   orderIndex?: number;
   imageFileId?: string;
 }
 
-export interface UpdateRemarkDto {
-  text?: string;
+export interface UpdateReportSlideDto {
+  content?: string;
   orderIndex?: number;
   imageFileId?: string | null;
 }
 
-export interface ReorderRemarksDto {
-  remarkIds: string[];
+export interface ReorderReportSlidesDto {
+  slideIds: string[];
 }

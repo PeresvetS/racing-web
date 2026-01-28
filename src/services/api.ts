@@ -17,10 +17,10 @@ import type {
   UpdateDayDto,
   TelemetrySession,
   BatchUpdateTelemetryDto,
-  Remark,
-  CreateRemarkDto,
-  UpdateRemarkDto,
-  ReorderRemarksDto,
+  ReportSlide,
+  CreateReportSlideDto,
+  UpdateReportSlideDto,
+  ReorderReportSlidesDto,
 } from '@/types';
 
 const api = axios.create({
@@ -110,6 +110,13 @@ export const documentsApi = {
     });
     return data;
   },
+
+  downloadPptx: async (id: string): Promise<Blob> => {
+    const { data } = await api.get<Blob>(`/documents/${id}/download-pptx`, {
+      responseType: 'blob',
+    });
+    return data;
+  },
 };
 
 // Files API
@@ -117,14 +124,13 @@ export const filesApi = {
   upload: async (
     file: File,
     type: FileType,
-    context?: { documentId?: string; dayId?: string; remarkId?: string },
+    context?: { documentId?: string; dayId?: string },
   ): Promise<FileData> => {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('type', type);
     if (context?.documentId) formData.append('documentId', context.documentId);
     if (context?.dayId) formData.append('dayId', context.dayId);
-    if (context?.remarkId) formData.append('remarkId', context.remarkId);
 
     const { data } = await api.post<FileData>('/files/upload', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
@@ -186,35 +192,34 @@ export const telemetryApi = {
   },
 };
 
-// Remarks API
-export const remarksApi = {
-  getAll: async (dayId: string): Promise<Remark[]> => {
-    const { data } = await api.get<Remark[]>(`/days/${dayId}/remarks`);
+// Report Slides API
+export const reportSlidesApi = {
+  getAll: async (dayId: string): Promise<ReportSlide[]> => {
+    const { data } = await api.get<ReportSlide[]>(`/days/${dayId}/report-slides`);
     return data;
   },
 
-  getOne: async (dayId: string, remarkId: string): Promise<Remark> => {
-    const { data } = await api.get<Remark>(`/days/${dayId}/remarks/${remarkId}`);
+  getOne: async (dayId: string, slideId: string): Promise<ReportSlide> => {
+    const { data } = await api.get<ReportSlide>(`/days/${dayId}/report-slides/${slideId}`);
     return data;
   },
 
-  create: async (dayId: string, dto: CreateRemarkDto): Promise<Remark> => {
-    const { data } = await api.post<Remark>(`/days/${dayId}/remarks`, dto);
+  create: async (dayId: string, dto: CreateReportSlideDto): Promise<ReportSlide> => {
+    const { data } = await api.post<ReportSlide>(`/days/${dayId}/report-slides`, dto);
     return data;
   },
 
-  update: async (dayId: string, remarkId: string, dto: UpdateRemarkDto): Promise<Remark> => {
-    const { data } = await api.patch<Remark>(`/days/${dayId}/remarks/${remarkId}`, dto);
+  update: async (dayId: string, slideId: string, dto: UpdateReportSlideDto): Promise<ReportSlide> => {
+    const { data } = await api.put<ReportSlide>(`/days/${dayId}/report-slides/${slideId}`, dto);
     return data;
   },
 
-  delete: async (dayId: string, remarkId: string): Promise<void> => {
-    await api.delete(`/days/${dayId}/remarks/${remarkId}`);
+  delete: async (dayId: string, slideId: string): Promise<void> => {
+    await api.delete(`/days/${dayId}/report-slides/${slideId}`);
   },
 
-  reorder: async (dayId: string, dto: ReorderRemarksDto): Promise<Remark[]> => {
-    const { data } = await api.patch<Remark[]>(`/days/${dayId}/remarks/reorder`, dto);
-    return data;
+  reorder: async (dayId: string, dto: ReorderReportSlidesDto): Promise<void> => {
+    await api.put(`/days/${dayId}/report-slides/reorder`, dto);
   },
 };
 

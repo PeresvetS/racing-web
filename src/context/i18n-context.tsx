@@ -11,7 +11,7 @@ import {
 interface I18nContextType {
   locale: Locale;
   setLocale: (locale: Locale) => void;
-  t: (key: TranslationKey) => string;
+  t: (key: TranslationKey, params?: Record<string, string | number>) => string;
   locales: Record<Locale, string>;
 }
 
@@ -40,8 +40,14 @@ export function I18nProvider({ children, storageKey = 'racing-locale' }: I18nPro
   );
 
   const t = useCallback(
-    (key: TranslationKey): string => {
-      return getNestedValue(translations[locale], key);
+    (key: TranslationKey, params?: Record<string, string | number>): string => {
+      let result = getNestedValue(translations[locale], key);
+      if (params) {
+        Object.entries(params).forEach(([paramKey, value]) => {
+          result = result.replace(new RegExp(`{{${paramKey}}}`, 'g'), String(value));
+        });
+      }
+      return result;
     },
     [locale],
   );
