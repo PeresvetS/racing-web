@@ -16,7 +16,7 @@ export const translations: Record<Locale, Translations> = {
   ee,
 };
 
-export const defaultLocale: Locale = 'ru';
+export const defaultLocale: Locale = 'en';
 
 type PathsToStringProps<T> = T extends string
   ? []
