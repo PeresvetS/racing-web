@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, Download, Pencil, Trash2, FileText, FileEdit } from 'lucide-react';
+import { Plus, Download, Pencil, Trash2, FileText, FileEdit, Archive, ArchiveRestore } from 'lucide-react';
 import { Header } from '@/components/layout/header';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -42,20 +42,43 @@ export function DocumentsPage() {
     },
   });
 
+  const updateStatusMutation = useMutation({
+    mutationFn: ({ id, status }: { id: string; status: DocumentStatus }) =>
+      documentsApi.update(id, { status }),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['documents'] });
+    },
+  });
+
   const handleDownload = async (doc: Document) => {
     try {
-      const blob = await documentsApi.download(doc.id);
+      const blob = await documentsApi.downloadPptx(doc.id);
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${doc.title}.pdf`;
+      a.download = `${doc.title}.pptx`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
+
+      // Обновить статус если документ был DRAFT
+      if (doc.status === 'DRAFT') {
+        updateStatusMutation.mutate({ id: doc.id, status: 'GENERATED' });
+      }
     } catch (error) {
       console.error('Failed to download document:', error);
     }
+  };
+
+  const handleArchive = (id: string) => {
+    if (window.confirm(t('documents.archiveConfirm'))) {
+      updateStatusMutation.mutate({ id, status: 'ARCHIVED' });
+    }
+  };
+
+  const handleUnarchive = (id: string) => {
+    updateStatusMutation.mutate({ id, status: 'GENERATED' });
   };
 
   const handleEdit = (doc: Document) => {
@@ -99,8 +122,8 @@ export function DocumentsPage() {
   return (
     <div className="flex flex-col">
       <Header title={t('documents.title')} />
-      <div className="p-6">
-        <div className="mb-6 flex items-center justify-between gap-4">
+      <div className="p-4 md:p-6">
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <Input
             placeholder={t('documents.searchPlaceholder')}
             value={search}
@@ -108,9 +131,9 @@ export function DocumentsPage() {
               setSearch(e.target.value);
               setPage(1);
             }}
-            className="max-w-sm"
+            className="w-full sm:max-w-sm"
           />
-          <Button onClick={handleCreate}>
+          <Button onClick={handleCreate} className="w-full sm:w-auto">
             <Plus className="mr-2 h-4 w-4" />
             {t('documents.createDocument')}
           </Button>
@@ -149,35 +172,61 @@ export function DocumentsPage() {
                   <p className="mb-4 text-xs text-muted-foreground">
                     {t('documents.createdAt')}: {formatDate(doc.createdAt)}
                   </p>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => navigate(`/documents/${doc.id}/edit`)}
+                      className="flex-1 sm:flex-none"
                     >
                       <FileEdit className="mr-1 h-4 w-4" />
-                      {t('documents.editReport')}
+                      <span className="hidden xs:inline">{t('documents.editReport')}</span>
+                      <span className="xs:hidden">Edit</span>
                     </Button>
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => void handleDownload(doc)}
-                      disabled={doc.status === 'DRAFT'}
+                      className="flex-1 sm:flex-none"
                     >
                       <Download className="mr-1 h-4 w-4" />
-                      {t('documents.download')}
+                      <span className="hidden xs:inline">{t('documents.download')}</span>
+                      <span className="xs:hidden">PPTX</span>
                     </Button>
-                    <Button variant="ghost" size="icon" onClick={() => handleEdit(doc)}>
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDelete(doc.id)}
-                      disabled={deleteMutation.isPending}
-                    >
-                      <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button>
+                    <div className="flex gap-1">
+                      <Button variant="ghost" size="icon" onClick={() => handleEdit(doc)}>
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      {doc.status === 'ARCHIVED' ? (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleUnarchive(doc.id)}
+                          disabled={updateStatusMutation.isPending}
+                          title={t('documents.unarchive')}
+                        >
+                          <ArchiveRestore className="h-4 w-4" />
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleArchive(doc.id)}
+                          disabled={updateStatusMutation.isPending}
+                          title={t('documents.archive')}
+                        >
+                          <Archive className="h-4 w-4" />
+                        </Button>
+                      )}
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDelete(doc.id)}
+                        disabled={deleteMutation.isPending}
+                      >
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>

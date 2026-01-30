@@ -22,10 +22,10 @@ export function DashboardPage() {
   return (
     <div className="flex flex-col">
       <Header title={t('dashboard.title')} />
-      <div className="p-6">
-        <div className="mb-8">
-          <h3 className="mb-4 text-lg font-semibold">{t('dashboard.stats.title')}</h3>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="p-4 md:p-6">
+        <div className="mb-6 md:mb-8">
+          <h3 className="mb-3 text-base font-semibold md:mb-4 md:text-lg">{t('dashboard.stats.title')}</h3>
+          <div className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">{t('dashboard.stats.total')}</CardTitle>

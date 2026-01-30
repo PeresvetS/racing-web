@@ -60,6 +60,9 @@ export const ee: Translations = {
     download: 'Laadi alla',
     editReport: 'Redaktor',
     deleteConfirm: 'Kas olete kindel, et soovite selle dokumendi kustutada?',
+    archive: 'Arhiveeri',
+    unarchive: 'Taasta arhiivist',
+    archiveConfirm: 'Kas olete kindel, et soovite selle dokumendi arhiveerida?',
     status: {
       DRAFT: 'Mustand',
       GENERATED: 'Loodud',

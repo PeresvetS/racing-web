@@ -42,13 +42,14 @@ export function ReportEditorPage() {
   }
 
   return (
-    <div className="container mx-auto py-6 px-4">
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-4">
+    <div className="container mx-auto py-4 px-3 md:py-6 md:px-4">
+      <div className="mb-4 md:mb-6">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => navigate('/documents')}
+            className="w-fit"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             {t('editor.backToDocuments')}
@@ -56,6 +57,7 @@ export function ReportEditorPage() {
           <Button
             onClick={() => void handleExportPptx()}
             disabled={isExporting}
+            className="w-full sm:w-auto"
           >
             {isExporting ? (
               <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -65,7 +67,7 @@ export function ReportEditorPage() {
             {t('editor.exportPptx')}
           </Button>
         </div>
-        <h1 className="text-2xl font-bold">{t('editor.pageTitle')}</h1>
+        <h1 className="text-xl font-bold md:text-2xl">{t('editor.pageTitle')}</h1>
       </div>
       <ReportEditor documentId={id} />
     </div>

@@ -58,6 +58,9 @@ export const ru = {
     download: 'Скачать',
     editReport: 'Редактор',
     deleteConfirm: 'Вы уверены, что хотите удалить этот документ?',
+    archive: 'В архив',
+    unarchive: 'Из архива',
+    archiveConfirm: 'Вы уверены, что хотите архивировать этот документ?',
     status: {
       DRAFT: 'Черновик',
       GENERATED: 'Создан',

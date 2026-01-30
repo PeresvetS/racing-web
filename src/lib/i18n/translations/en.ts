@@ -60,6 +60,9 @@ export const en: Translations = {
     download: 'Download',
     editReport: 'Editor',
     deleteConfirm: 'Are you sure you want to delete this document?',
+    archive: 'Archive',
+    unarchive: 'Unarchive',
+    archiveConfirm: 'Are you sure you want to archive this document?',
     status: {
       DRAFT: 'Draft',
       GENERATED: 'Generated',

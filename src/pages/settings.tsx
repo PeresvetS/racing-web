@@ -15,16 +15,16 @@ export function SettingsPage() {
   return (
     <div className="flex flex-col">
       <Header title={t('settings.title')} />
-      <div className="space-y-6 p-6">
+      <div className="space-y-4 p-4 md:space-y-6 md:p-6">
         <Card>
-          <CardHeader>
-            <CardTitle>{t('settings.profile.title')}</CardTitle>
+          <CardHeader className="pb-3 md:pb-6">
+            <CardTitle className="text-lg md:text-xl">{t('settings.profile.title')}</CardTitle>
             <CardDescription>{t('settings.profile.description')}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-2">
               <Label>{t('settings.profile.email')}</Label>
-              <p className="text-sm text-muted-foreground">{user?.email}</p>
+              <p className="text-sm text-muted-foreground break-all">{user?.email}</p>
             </div>
             <div className="grid gap-2">
               <Label>{t('settings.profile.name')}</Label>
@@ -40,27 +40,33 @@ export function SettingsPage() {
         </Card>
 
         <Card>
-          <CardHeader>
-            <CardTitle>{t('settings.appearance.title')}</CardTitle>
+          <CardHeader className="pb-3 md:pb-6">
+            <CardTitle className="text-lg md:text-xl">{t('settings.appearance.title')}</CardTitle>
             <CardDescription>{t('settings.appearance.description')}</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <Button
                 variant={theme === 'light' ? 'default' : 'outline'}
                 onClick={() => setTheme('light')}
+                size="sm"
+                className="flex-1 sm:flex-none"
               >
                 {t('settings.appearance.light')}
               </Button>
               <Button
                 variant={theme === 'dark' ? 'default' : 'outline'}
                 onClick={() => setTheme('dark')}
+                size="sm"
+                className="flex-1 sm:flex-none"
               >
                 {t('settings.appearance.dark')}
               </Button>
               <Button
                 variant={theme === 'system' ? 'default' : 'outline'}
                 onClick={() => setTheme('system')}
+                size="sm"
+                className="flex-1 sm:flex-none"
               >
                 {t('settings.appearance.system')}
               </Button>
@@ -69,17 +75,19 @@ export function SettingsPage() {
         </Card>
 
         <Card>
-          <CardHeader>
-            <CardTitle>{t('settings.language.title')}</CardTitle>
+          <CardHeader className="pb-3 md:pb-6">
+            <CardTitle className="text-lg md:text-xl">{t('settings.language.title')}</CardTitle>
             <CardDescription>{t('settings.language.description')}</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               {(Object.keys(locales) as Locale[]).map((loc) => (
                 <Button
                   key={loc}
                   variant={locale === loc ? 'default' : 'outline'}
                   onClick={() => setLocale(loc)}
+                  size="sm"
+                  className="flex-1 sm:flex-none"
                 >
                   {locales[loc]}
                 </Button>

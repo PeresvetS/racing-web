@@ -1,6 +1,7 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '@/context/auth-context';
-import { Sidebar } from './sidebar';
+import { SidebarProvider } from '@/context/sidebar-context';
+import { Sidebar, MobileSidebar } from './sidebar';
 
 export function MainLayout() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -8,7 +9,7 @@ export function MainLayout() {
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="text-muted-foreground">Загрузка...</div>
+        <div className="text-muted-foreground">Loading...</div>
       </div>
     );
   }
@@ -18,11 +19,14 @@ export function MainLayout() {
   }
 
   return (
-    <div className="flex min-h-screen">
-      <Sidebar />
-      <main className="flex-1 overflow-auto">
-        <Outlet />
-      </main>
-    </div>
+    <SidebarProvider>
+      <div className="flex min-h-screen">
+        <Sidebar />
+        <MobileSidebar />
+        <main className="flex-1 overflow-auto">
+          <Outlet />
+        </main>
+      </div>
+    </SidebarProvider>
   );
 }
