@@ -8,7 +8,7 @@ export function MainLayout() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-[100dvh] items-center justify-center">
         <div className="text-muted-foreground">Loading...</div>
       </div>
     );
@@ -20,7 +20,7 @@ export function MainLayout() {
 
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen">
+      <div className="flex min-h-[100dvh]">
         <Sidebar />
         <MobileSidebar />
         <main className="flex-1 overflow-auto">

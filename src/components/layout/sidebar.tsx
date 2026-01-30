@@ -91,13 +91,14 @@ export function MobileSidebar() {
     <>
       {/* Overlay */}
       <div
-        className="fixed inset-0 z-40 bg-black/50 md:hidden"
+        className="fixed inset-0 z-40 bg-black/50 touch-manipulation md:hidden"
         onClick={close}
+        onTouchEnd={close}
         aria-hidden="true"
       />
 
       {/* Drawer */}
-      <aside className="fixed inset-y-0 left-0 z-50 flex w-72 flex-col bg-sidebar-background shadow-xl md:hidden">
+      <aside className="fixed left-0 top-0 z-50 flex h-[100dvh] w-72 flex-col bg-sidebar-background shadow-xl touch-manipulation md:hidden">
         <div className="flex h-16 items-center justify-between border-b px-6">
           <h1 className="text-xl font-bold text-sidebar-foreground">Racing Admin</h1>
           <Button variant="ghost" size="icon" onClick={close}>

@@ -70,6 +70,10 @@
   border-color: var(--color-border);
 }
 
+html {
+  height: 100%;
+}
+
 body {
   background-color: var(--color-background);
   color: var(--color-foreground);
@@ -87,9 +91,21 @@ body {
     'Helvetica Neue',
     sans-serif;
   margin: 0;
-  min-height: 100vh;
+  min-height: 100%;
+  min-height: 100dvh;
+  -webkit-overflow-scrolling: touch;
 }
 
 #root {
-  min-height: 100vh;
+  min-height: 100%;
+  min-height: 100dvh;
+}
+
+/* Safe area для iPhone с notch */
+.safe-area-inset-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-inset-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
 }
