@@ -20,6 +20,8 @@ interface SessionRow {
   maxRpm: string;
   maxSpeedKmh: string;
   minSpeedKmh: string;
+  maxLatG: string;
+  maxLonG: string;
 }
 
 const STATIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -46,6 +48,8 @@ function createInitialRows(sessions: TelemetrySession[]): SessionRow[] {
       maxRpm: existing?.maxRpm?.toString() || '',
       maxSpeedKmh: existing?.maxSpeedKmh?.toString() || '',
       minSpeedKmh: existing?.minSpeedKmh?.toString() || '',
+      maxLatG: existing?.maxLatG?.toString() || '',
+      maxLonG: existing?.maxLonG?.toString() || '',
     };
   });
 }
@@ -81,7 +85,9 @@ export function TelemetryTable({ dayId, sessions, onUpdate }: TelemetryTableProp
           row.bestLaps.trim() ||
           row.lapTime.trim() ||
           row.maxSpeedKmh.trim() ||
-          row.minSpeedKmh.trim()
+          row.minSpeedKmh.trim() ||
+          row.maxLatG.trim() ||
+          row.maxLonG.trim()
         );
       })
       .map((row) => ({
@@ -91,6 +97,8 @@ export function TelemetryTable({ dayId, sessions, onUpdate }: TelemetryTableProp
         maxRpm: parseInteger(row.maxRpm),
         maxSpeedKmh: parseNumber(row.maxSpeedKmh),
         minSpeedKmh: parseNumber(row.minSpeedKmh),
+        maxLatG: parseNumber(row.maxLatG),
+        maxLonG: parseNumber(row.maxLonG),
       }));
 
     updateMutation.mutate(sessionsToSave);
@@ -132,6 +140,12 @@ export function TelemetryTable({ dayId, sessions, onUpdate }: TelemetryTableProp
               </th>
               <th className="border px-3 py-2 text-left text-sm font-medium">
                 {t('editor.telemetry.minSpeed')}
+              </th>
+              <th className="border px-3 py-2 text-left text-sm font-medium">
+                {t('editor.telemetry.maxLatG')}
+              </th>
+              <th className="border px-3 py-2 text-left text-sm font-medium">
+                {t('editor.telemetry.maxLonG')}
               </th>
             </tr>
           </thead>
@@ -175,6 +189,26 @@ export function TelemetryTable({ dayId, sessions, onUpdate }: TelemetryTableProp
                     onChange={(e) => handleChange(row.station, 'minSpeedKmh', e.target.value)}
                     className="h-8"
                     placeholder="0.0"
+                  />
+                </td>
+                <td className="border p-1">
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={row.maxLatG}
+                    onChange={(e) => handleChange(row.station, 'maxLatG', e.target.value)}
+                    className="h-8"
+                    placeholder="0.00"
+                  />
+                </td>
+                <td className="border p-1">
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={row.maxLonG}
+                    onChange={(e) => handleChange(row.station, 'maxLonG', e.target.value)}
+                    className="h-8"
+                    placeholder="0.00"
                   />
                 </td>
               </tr>

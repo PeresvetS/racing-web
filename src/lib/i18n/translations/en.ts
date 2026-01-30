@@ -172,6 +172,8 @@ export const en: Translations = {
       maxRpm: 'Max RPM',
       maxSpeed: 'Max Speed',
       minSpeed: 'Min Speed',
+      maxLatG: 'Max Lat G',
+      maxLonG: 'Max Lon G',
       import: 'Import CSV',
       importing: 'Importing...',
       importHint: 'Upload CSV file from RaceStudio 3',

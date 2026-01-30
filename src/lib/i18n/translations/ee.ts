@@ -172,6 +172,8 @@ export const ee: Translations = {
       maxRpm: 'Maks. RPM',
       maxSpeed: 'Maks. kiirus',
       minSpeed: 'Min. kiirus',
+      maxLatG: 'Külg G',
+      maxLonG: 'Pikk. G',
       import: 'Impordi CSV',
       importing: 'Importimine...',
       importHint: 'Laadige üles RaceStudio 3 CSV fail',

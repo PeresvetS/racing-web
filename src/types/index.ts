@@ -65,6 +65,8 @@ export interface TelemetrySession {
   maxRpm: number | null;
   maxSpeedKmh: number | null;
   minSpeedKmh: number | null;
+  maxLatG: number | null;
+  maxLonG: number | null;
 }
 
 export interface ReportSlide {
@@ -177,6 +179,8 @@ export interface UpdateTelemetrySessionDto {
   maxRpm?: number | null;
   maxSpeedKmh?: number | null;
   minSpeedKmh?: number | null;
+  maxLatG?: number | null;
+  maxLonG?: number | null;
 }
 
 export interface BatchUpdateTelemetryDto {

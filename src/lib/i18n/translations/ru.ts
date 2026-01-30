@@ -170,6 +170,8 @@ export const ru = {
       maxRpm: 'Макс. RPM',
       maxSpeed: 'Макс. скорость',
       minSpeed: 'Мин. скорость',
+      maxLatG: 'Бок. G',
+      maxLonG: 'Прод. G',
       import: 'Импорт CSV',
       importing: 'Импорт...',
       importHint: 'Загрузите CSV файл из RaceStudio 3',
