@@ -170,6 +170,11 @@ export const ru = {
       maxRpm: 'Макс. RPM',
       maxSpeed: 'Макс. скорость',
       minSpeed: 'Мин. скорость',
+      import: 'Импорт CSV',
+      importing: 'Импорт...',
+      importHint: 'Загрузите CSV файл из RaceStudio 3',
+      imported: 'Импортировано {{count}} кругов',
+      importError: 'Ошибка импорта телеметрии',
     },
     reportSlides: {
       title: 'Слайды отчёта (DAY N: REPORT)',

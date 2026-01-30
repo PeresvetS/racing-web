@@ -172,6 +172,11 @@ export const en: Translations = {
       maxRpm: 'Max RPM',
       maxSpeed: 'Max Speed',
       minSpeed: 'Min Speed',
+      import: 'Import CSV',
+      importing: 'Importing...',
+      importHint: 'Upload CSV file from RaceStudio 3',
+      imported: '{{count}} laps imported',
+      importError: 'Failed to import telemetry',
     },
     reportSlides: {
       title: 'Report Slides (DAY N: REPORT)',

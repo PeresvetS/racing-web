@@ -17,6 +17,7 @@ import type {
   UpdateDayDto,
   TelemetrySession,
   BatchUpdateTelemetryDto,
+  ImportTelemetryResponse,
   ReportSlide,
   CreateReportSlideDto,
   UpdateReportSlideDto,
@@ -192,6 +193,19 @@ export const telemetryApi = {
 
   delete: async (dayId: string, sessionId: string): Promise<void> => {
     await api.delete(`/days/${dayId}/telemetry/${sessionId}`);
+  },
+
+  importCsv: async (dayId: string, file: File): Promise<ImportTelemetryResponse> => {
+    const formData = new FormData();
+    formData.append('file', file);
+    const { data } = await api.post<ImportTelemetryResponse>(
+      `/days/${dayId}/telemetry/import`,
+      formData,
+      {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      },
+    );
+    return data;
   },
 };
 

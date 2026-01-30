@@ -80,7 +80,6 @@ export function TelemetryTable({ dayId, sessions, onUpdate }: TelemetryTableProp
         return (
           row.bestLaps.trim() ||
           row.lapTime.trim() ||
-          row.maxRpm.trim() ||
           row.maxSpeedKmh.trim() ||
           row.minSpeedKmh.trim()
         );
@@ -99,8 +98,7 @@ export function TelemetryTable({ dayId, sessions, onUpdate }: TelemetryTableProp
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">{t('editor.telemetry.title')}</h3>
+      <div className="flex justify-end">
         <Button
           type="button"
           size="sm"
@@ -130,9 +128,6 @@ export function TelemetryTable({ dayId, sessions, onUpdate }: TelemetryTableProp
                 {t('editor.telemetry.lapTime')}
               </th>
               <th className="border px-3 py-2 text-left text-sm font-medium">
-                {t('editor.telemetry.maxRpm')}
-              </th>
-              <th className="border px-3 py-2 text-left text-sm font-medium">
                 {t('editor.telemetry.maxSpeed')}
               </th>
               <th className="border px-3 py-2 text-left text-sm font-medium">
@@ -160,15 +155,6 @@ export function TelemetryTable({ dayId, sessions, onUpdate }: TelemetryTableProp
                     onChange={(e) => handleChange(row.station, 'lapTime', e.target.value)}
                     className="h-8"
                     placeholder="0:00.000"
-                  />
-                </td>
-                <td className="border p-1">
-                  <Input
-                    type="number"
-                    value={row.maxRpm}
-                    onChange={(e) => handleChange(row.station, 'maxRpm', e.target.value)}
-                    className="h-8"
-                    placeholder="0"
                   />
                 </td>
                 <td className="border p-1">

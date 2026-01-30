@@ -183,6 +183,19 @@ export interface BatchUpdateTelemetryDto {
   sessions: UpdateTelemetrySessionDto[];
 }
 
+export interface ImportTelemetryResponse {
+  lapsImported: number;
+  dayUpdated: {
+    dayDate: string | null;
+    weather: string | null;
+  };
+  metadata: {
+    session: string;
+    racer: string;
+    venue: string;
+  };
+}
+
 // ===== Report Slide Types =====
 export interface CreateReportSlideDto {
   content: string;

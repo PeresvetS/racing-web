@@ -6,10 +6,11 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FileUpload } from './file-upload';
 import { TelemetryTable } from './telemetry-table';
+import { TelemetryImport } from './telemetry-import';
 import { ReportSlidesSection } from './report-slides-section';
 import { daysApi } from '@/services/api';
 import { useI18n } from '@/context/i18n-context';
-import type { ReportDay, FileData } from '@/types';
+import type { ReportDay, FileData, ImportTelemetryResponse } from '@/types';
 
 interface DayEditorProps {
   documentId: string;
@@ -17,7 +18,6 @@ interface DayEditorProps {
   onUpdate: () => void;
 }
 
-// Компонент использует key prop для сброса состояния при смене дня
 export function DayEditor({ documentId, day, onUpdate }: DayEditorProps) {
   const { t } = useI18n();
   const queryClient = useQueryClient();
@@ -51,6 +51,18 @@ export function DayEditor({ documentId, day, onUpdate }: DayEditorProps) {
   const handleFileChange = (file: FileData | null) => {
     setKartCheckingFile(file);
     updateMutation.mutate({ kartCheckingFileId: file?.id || null });
+  };
+
+  const handleTelemetryImported = (result: ImportTelemetryResponse) => {
+    // Обновляем локальное состояние из импортированных данных
+    if (result.dayUpdated.dayDate) {
+      setDayDate(result.dayUpdated.dayDate);
+    }
+    if (result.dayUpdated.weather) {
+      setWeather(result.dayUpdated.weather);
+    }
+    // Обновляем данные документа
+    onUpdate();
   };
 
   const isDay1 = day.dayNumber === 1;
@@ -131,10 +143,15 @@ export function DayEditor({ documentId, day, onUpdate }: DayEditorProps) {
         </Card>
       )}
 
-      {/* Telemetry Table */}
+      {/* Telemetry Import & Table */}
       <Card>
-        <CardContent className="pt-6">
+        <CardHeader>
+          <CardTitle className="text-base">{t('editor.telemetry.title')}</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <TelemetryImport dayId={day.id} onImported={handleTelemetryImported} />
           <TelemetryTable
+            key={`telemetry-${day.id}-${day.sessions.length}-${day.sessions.map(s => s.id).join(',')}`}
             dayId={day.id}
             sessions={day.sessions}
             onUpdate={onUpdate}

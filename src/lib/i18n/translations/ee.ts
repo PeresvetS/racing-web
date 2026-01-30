@@ -172,6 +172,11 @@ export const ee: Translations = {
       maxRpm: 'Maks. RPM',
       maxSpeed: 'Maks. kiirus',
       minSpeed: 'Min. kiirus',
+      import: 'Impordi CSV',
+      importing: 'Importimine...',
+      importHint: 'Laadige üles RaceStudio 3 CSV fail',
+      imported: '{{count}} ringi imporditud',
+      importError: 'Telemeetria importimine ebaõnnestus',
     },
     reportSlides: {
       title: 'Aruande slaidid (DAY N: REPORT)',
