@@ -187,8 +187,18 @@ export interface BatchUpdateTelemetryDto {
   sessions: UpdateTelemetrySessionDto[];
 }
 
+/**
+ * Ответ на импорт одного CSV файла
+ * Один CSV = одна сессия с агрегированными данными
+ */
 export interface ImportTelemetryResponse {
-  lapsImported: number;
+  sessionsImported: number;
+  station: number;
+  summary: {
+    totalLaps: number;
+    bestLapTime: string;
+    maxSpeedKmh: number;
+  };
   dayUpdated: {
     dayDate: string | null;
     weather: string | null;
@@ -198,6 +208,14 @@ export interface ImportTelemetryResponse {
     racer: string;
     venue: string;
   };
+}
+
+/**
+ * Ответ на bulk импорт (несколько CSV файлов)
+ */
+export interface BulkImportResponse {
+  sessionsImported: number;
+  results: ImportTelemetryResponse[];
 }
 
 // ===== Report Slide Types =====

@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Save, Loader2 } from 'lucide-react';
+import { Save, Loader2, Upload } from 'lucide-react';
 import { telemetryApi } from '@/services/api';
 import { useI18n } from '@/context/i18n-context';
 import type { TelemetrySession, UpdateTelemetrySessionDto } from '@/types';
@@ -59,6 +59,9 @@ export function TelemetryTable({ dayId, sessions, onUpdate }: TelemetryTableProp
   const queryClient = useQueryClient();
   const [rows, setRows] = useState<SessionRow[]>(() => createInitialRows(sessions));
   const [hasChanges, setHasChanges] = useState(false);
+  const [uploadingStation, setUploadingStation] = useState<number | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const targetStationRef = useRef<number | null>(null);
 
   const updateMutation = useMutation({
     mutationFn: (sessionsData: UpdateTelemetrySessionDto[]) =>
@@ -104,8 +107,54 @@ export function TelemetryTable({ dayId, sessions, onUpdate }: TelemetryTableProp
     updateMutation.mutate(sessionsToSave);
   };
 
+  const handleImportClick = (station: number) => {
+    targetStationRef.current = station;
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    const station = targetStationRef.current;
+    if (!file || !station) return;
+
+    e.target.value = '';
+    setUploadingStation(station);
+
+    try {
+      const result = await telemetryApi.importCsv(dayId, file, station);
+      // Обновляем локальную строку
+      setRows((prev) =>
+        prev.map((row) =>
+          row.station === station
+            ? {
+                ...row,
+                bestLaps: result.summary.totalLaps.toString(),
+                lapTime: result.summary.bestLapTime,
+                maxSpeedKmh: result.summary.maxSpeedKmh.toString(),
+              }
+            : row,
+        ),
+      );
+      void queryClient.invalidateQueries({ queryKey: ['document'] });
+      onUpdate();
+    } catch (err) {
+      console.error('Failed to import:', err);
+    } finally {
+      setUploadingStation(null);
+      targetStationRef.current = null;
+    }
+  };
+
   return (
     <div className="space-y-4">
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".csv,.txt"
+        onChange={handleFileChange}
+        className="hidden"
+      />
+
       <div className="flex justify-end">
         <Button
           type="button"
@@ -126,7 +175,7 @@ export function TelemetryTable({ dayId, sessions, onUpdate }: TelemetryTableProp
         <table className="w-full border-collapse">
           <thead>
             <tr className="bg-muted">
-              <th className="border px-3 py-2 text-left text-sm font-medium">
+              <th className="border px-3 py-2 text-left text-sm font-medium w-16">
                 {t('editor.telemetry.station')}
               </th>
               <th className="border px-3 py-2 text-left text-sm font-medium">
@@ -146,6 +195,9 @@ export function TelemetryTable({ dayId, sessions, onUpdate }: TelemetryTableProp
               </th>
               <th className="border px-3 py-2 text-left text-sm font-medium">
                 {t('editor.telemetry.maxLonG')}
+              </th>
+              <th className="border px-3 py-2 text-center text-sm font-medium w-16">
+                CSV
               </th>
             </tr>
           </thead>
@@ -210,6 +262,22 @@ export function TelemetryTable({ dayId, sessions, onUpdate }: TelemetryTableProp
                     className="h-8"
                     placeholder="0.00"
                   />
+                </td>
+                <td className="border p-1 text-center">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleImportClick(row.station)}
+                    disabled={uploadingStation !== null}
+                    title={t('editor.telemetry.importToRow')}
+                  >
+                    {uploadingStation === row.station ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Upload className="h-4 w-4" />
+                    )}
+                  </Button>
                 </td>
               </tr>
             ))}

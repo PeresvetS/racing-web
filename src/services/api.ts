@@ -18,6 +18,7 @@ import type {
   TelemetrySession,
   BatchUpdateTelemetryDto,
   ImportTelemetryResponse,
+  BulkImportResponse,
   ReportSlide,
   CreateReportSlideDto,
   UpdateReportSlideDto,
@@ -195,11 +196,39 @@ export const telemetryApi = {
     await api.delete(`/days/${dayId}/telemetry/${sessionId}`);
   },
 
-  importCsv: async (dayId: string, file: File): Promise<ImportTelemetryResponse> => {
+  /**
+   * Импорт одного CSV файла
+   * @param dayId ID дня
+   * @param file CSV файл
+   * @param targetStation Номер строки для обновления (опционально)
+   */
+  importCsv: async (
+    dayId: string,
+    file: File,
+    targetStation?: number,
+  ): Promise<ImportTelemetryResponse> => {
     const formData = new FormData();
     formData.append('file', file);
-    const { data } = await api.post<ImportTelemetryResponse>(
-      `/days/${dayId}/telemetry/import`,
+    const url = targetStation
+      ? `/days/${dayId}/telemetry/import?targetStation=${targetStation}`
+      : `/days/${dayId}/telemetry/import`;
+    const { data } = await api.post<ImportTelemetryResponse>(url, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return data;
+  },
+
+  /**
+   * Массовый импорт нескольких CSV файлов
+   * Каждый CSV = одна сессия
+   */
+  importBulk: async (dayId: string, files: File[]): Promise<BulkImportResponse> => {
+    const formData = new FormData();
+    files.forEach((file) => {
+      formData.append('files', file);
+    });
+    const { data } = await api.post<BulkImportResponse>(
+      `/days/${dayId}/telemetry/import-bulk`,
       formData,
       {
         headers: { 'Content-Type': 'multipart/form-data' },

@@ -10,7 +10,7 @@ import { TelemetryImport } from './telemetry-import';
 import { ReportSlidesSection } from './report-slides-section';
 import { daysApi } from '@/services/api';
 import { useI18n } from '@/context/i18n-context';
-import type { ReportDay, FileData, ImportTelemetryResponse } from '@/types';
+import type { ReportDay, FileData, ImportTelemetryResponse, BulkImportResponse } from '@/types';
 
 interface DayEditorProps {
   documentId: string;
@@ -53,13 +53,16 @@ export function DayEditor({ documentId, day, onUpdate }: DayEditorProps) {
     updateMutation.mutate({ kartCheckingFileId: file?.id || null });
   };
 
-  const handleTelemetryImported = (result: ImportTelemetryResponse) => {
-    // Обновляем локальное состояние из импортированных данных
-    if (result.dayUpdated.dayDate) {
-      setDayDate(result.dayUpdated.dayDate);
+  const handleTelemetryImported = (result: ImportTelemetryResponse | BulkImportResponse) => {
+    // Для single import берём dayUpdated напрямую, для bulk — из первого результата
+    const dayUpdated =
+      'dayUpdated' in result ? result.dayUpdated : result.results[0]?.dayUpdated;
+
+    if (dayUpdated?.dayDate) {
+      setDayDate(dayUpdated.dayDate);
     }
-    if (result.dayUpdated.weather) {
-      setWeather(result.dayUpdated.weather);
+    if (dayUpdated?.weather) {
+      setWeather(dayUpdated.weather);
     }
     // Обновляем данные документа
     onUpdate();
