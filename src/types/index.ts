@@ -198,6 +198,9 @@ export interface ImportTelemetryResponse {
     totalLaps: number;
     bestLapTime: string;
     maxSpeedKmh: number;
+    minSpeedKmh: number;
+    maxLatG: number;
+    maxLonG: number;
   };
   dayUpdated: {
     dayDate: string | null;

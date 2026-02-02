@@ -122,7 +122,7 @@ export function TelemetryTable({ dayId, sessions, onUpdate }: TelemetryTableProp
 
     try {
       const result = await telemetryApi.importCsv(dayId, file, station);
-      // Обновляем локальную строку
+      // Обновляем локальную строку всеми полями из response
       setRows((prev) =>
         prev.map((row) =>
           row.station === station
@@ -131,6 +131,9 @@ export function TelemetryTable({ dayId, sessions, onUpdate }: TelemetryTableProp
                 bestLaps: result.summary.totalLaps.toString(),
                 lapTime: result.summary.bestLapTime,
                 maxSpeedKmh: result.summary.maxSpeedKmh.toString(),
+                minSpeedKmh: result.summary.minSpeedKmh.toString(),
+                maxLatG: result.summary.maxLatG.toString(),
+                maxLonG: result.summary.maxLonG.toString(),
               }
             : row,
         ),
