@@ -204,7 +204,6 @@ export interface ImportTelemetryResponse {
   };
   dayUpdated: {
     dayDate: string | null;
-    weather: string | null;
   };
   metadata: {
     session: string;

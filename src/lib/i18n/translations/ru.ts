@@ -176,7 +176,7 @@ export const ru = {
       importing: 'Импорт...',
       importSessions: 'Импорт сессий',
       importHint: 'Загрузите CSV файл из RaceStudio 3',
-      importHintMultiple: 'Выберите один или несколько CSV файлов (каждый = сессия)',
+      importHintMultiple: 'Для массовой загрузки. Для одиночной — кнопки в таблице ниже',
       importToRow: 'Загрузить CSV в эту строку',
       importedSession: '{{laps}} кругов, лучшее {{time}}',
       importedSessions: 'Импортировано {{count}} сессий',

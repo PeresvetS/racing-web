@@ -178,7 +178,7 @@ export const ee: Translations = {
       importing: 'Importimine...',
       importSessions: 'Impordi sessioonid',
       importHint: 'Laadige üles RaceStudio 3 CSV fail',
-      importHintMultiple: 'Valige üks või mitu CSV faili (igaüks = üks sessioon)',
+      importHintMultiple: 'Massimpordi jaoks. Ühekordse jaoks — kasutage nuppe allolevas tabelis',
       importToRow: 'Impordi CSV sellesse ritta',
       importedSession: '{{laps}} ringi, parim {{time}}',
       importedSessions: '{{count}} sessiooni imporditud',

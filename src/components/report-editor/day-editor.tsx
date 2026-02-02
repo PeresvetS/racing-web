@@ -61,10 +61,7 @@ export function DayEditor({ documentId, day, onUpdate }: DayEditorProps) {
     if (dayUpdated?.dayDate) {
       setDayDate(dayUpdated.dayDate);
     }
-    if (dayUpdated?.weather) {
-      setWeather(dayUpdated.weather);
-    }
-    // Обновляем данные документа
+    // Погода проставляется только вручную
     onUpdate();
   };
 

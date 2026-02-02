@@ -178,7 +178,7 @@ export const en: Translations = {
       importing: 'Importing...',
       importSessions: 'Import Sessions',
       importHint: 'Upload CSV file from RaceStudio 3',
-      importHintMultiple: 'Select one or more CSV files (each = one session)',
+      importHintMultiple: 'For bulk upload. For single — use buttons in table below',
       importToRow: 'Import CSV to this row',
       importedSession: '{{laps}} laps, best {{time}}',
       importedSessions: '{{count}} sessions imported',
